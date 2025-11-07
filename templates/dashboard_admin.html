@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - IT Helpdesk</title>
+  </head>
+  <body>
+    <title>Admin Dashboard</title>
+    <h2>Welcome, {{ session['username'] }} (Admin)</h2>
+    <p>
+      <!-- Logout link -->
+      <a href='{{ url_for("logout") }}'>Logout</a>
+    </p>
+    <ul>
+      <!-- User-specific options -->
+      <li>#Reassign or Escalate Tickets</li>
+      <li>#View Metrics & Reports</li>
+      <li>
+        <a href='{{ url_for("manage_users") }}'>Manage Users</a>
+      </li>
+    </ul>
+  </body>
+</html>

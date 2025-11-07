@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Submit Ticket - IT Helpdesk</title>
+  </head>
+  <body>
+    <h2>Submit a New Ticket</h2>
+    <p>
+      <a href='{{ url_for("dashboard_user") }}'>Back to Dashboard</a>
+    </p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if
+        messages %}
+        {% for category, message in messages %}<p style="color: green">{{ message }}</p>{% endfor %}
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+      <label>Title:</label>
+      <br />
+      <input type="text" name="title" required />
+      <br />
+      <br />
+      <label>Description:</label>
+      <br />
+      <textarea name="description" required></textarea>
+      <br />
+      <br />
+      <label>Category:</label>
+      <br />
+      <input type="text" name="category" />
+      <br />
+      <br />
+      <label>Priority:</label>
+      <br />
+      <select name="priority">
+        <option value="Low">Low</option>
+        <option value="Medium" selected>Medium</option>
+        <option value="High">High</option>
+      </select>
+      <br />
+      <br />
+      <button type="submit">Submit Ticket</button>
+    </form>
+  </body>
+</html>
