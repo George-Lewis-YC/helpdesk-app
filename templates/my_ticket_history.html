@@ -4,9 +4,22 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>My Ticket History - IT Helpdesk</title>
+        <meta name="description"
+              content="View your ticket history in the IT Helpdesk portal." />
+        <meta name="keywords"
+              content="IT helpdesk, user, ticket history, support tickets" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     </head>
     <body>
-        <h3>My Ticket History</h3>
+        <div class="top-banner">
+            <img class="logo"
+                 src="{{ url_for('static', filename='logo.png') }}"
+                 alt="IT Helpdesk Logo" />
+            <div class="banner-title">
+                <div class="site-title">IT Hefefelpdesk</div>
+                <div class="page-title">User Dashboard - My Ticket History</div>
+            </div>
+        </div>
         <p>
             <a href='{{ url_for("dashboard_user") }}'>Back to Dashboard.</a>
         </p>

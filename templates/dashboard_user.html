@@ -4,9 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Dashboard - IT Helpdesk</title>
+    <meta name="description"
+          content="User dashboard for the IT Helpdesk portal to submit and track support requests." />
+    <meta name="keywords"
+          content="IT helpdesk, user, dashboard, support tickets" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
-    <title>User Dashboard</title>
+    <div class="top-banner">
+      <img class="logo"
+           src="{{ url_for('static', filename='logo.png') }}"
+           alt="IT Helpdesk Logo" />
+      <div class="banner-title">
+        <div class="site-title">IT Helpdesk</div>
+        <div class="page-title">User Dashboard</div>
+      </div>
+    </div>
     <h2>Welcome, {{ session['username'] }} (User)</h2>
     <!-- Logout link -->
     <p>

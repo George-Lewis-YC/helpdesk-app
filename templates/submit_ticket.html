@@ -4,16 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Submit Ticket - IT Helpdesk</title>
+    <meta name="description"
+          content="Submit a new support ticket in the IT Helpdesk portal." />
+    <meta name="keywords" content="IT helpdesk, submit ticket, support request" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
-    <h2>Submit a New Ticket</h2>
+    <div class="top-banner">
+      <img class="logo"
+           src="{{ url_for('static', filename='logo.png') }}"
+           alt="IT Helpdesk Logo" />
+      <div class="banner-title">
+        <div class="site-title">IT Helpdesk</div>
+        <div class="page-title">User Dashboard - Submit a New Ticket</div>
+      </div>
+    </div>
     <p>
       <a href='{{ url_for("dashboard_user") }}'>Back to Dashboard</a>
     </p>
     {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if
-        messages %}
-        {% for category, message in messages %}<p style="color: green">{{ message }}</p>{% endfor %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'error' %}
+            <p class="flash-error">{{ message }}</p>
+          {% elif category == 'success' %}
+            <p class="flash-success">{{ message }}</p>
+          {% else %}
+            <p>{{ message }}</p>
+          {% endif %}
+        {% endfor %}
       {% endif %}
     {% endwith %}
     <form method="POST">

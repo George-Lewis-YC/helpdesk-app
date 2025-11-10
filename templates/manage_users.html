@@ -4,9 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manage Users - IT Dashboard</title>
+    <meta name="description" content="Manage users in the IT Helpdesk portal." />
+    <meta name="keywords"
+          content="IT helpdesk, manage users, user administration" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
-    <h2>Manage Users</h2>
+    <div class="top-banner">
+      <img class="logo"
+           src="{{ url_for('static', filename='logo.png') }}"
+           alt="IT Helpdesk Logo" />
+      <div class="banner-title">
+        <div class="site-title">IT Helpdesk</div>
+        <div class="page-title">Admin Dashboard - Manage Users</div>
+      </div>
+    </div>
     <p>
       <a href='{{ url_for("dashboard_admin") }}'>Back to Dashboard.</a>
     </p>
