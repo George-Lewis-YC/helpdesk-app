@@ -228,18 +228,23 @@ def dashboard_it():
     else:
         return redirect(url_for("login"))
 
-
 @app.route("/manage_tickets", methods=["GET", "POST"])
 def manage_tickets():
+    # Only IT Support users can access this page
     if "username" not in session or session["role"] != "IT Support":
         return redirect(url_for("login"))
 
+    # Open a DB cursor for queries/updates
     cur = mysql.connection.cursor()
 
+    # Handle form submission to update ticket status/priority
     if request.method == "POST":
+        # NOTE: validate/sanitize inputs as appropriate (e.g., ensure status/priority are allowed values)
         ticket_id = request.form["ticket_id"]
         new_status = request.form["status"]
         new_priority = request.form["priority"]
+
+        # Parameterized query prevents SQL injection
         cur.execute(
             """
             UPDATE tickets
@@ -251,11 +256,16 @@ def manage_tickets():
         mysql.connection.commit()
         flash("Ticket updated successfully.", "success")
 
+    # Fetch all tickets to display to IT Support
     cur.execute(
         "SELECT id, title, description, category, priority, status, created_at FROM tickets"
     )
     tickets = cur.fetchall()
+
+    # Close cursor to release DB resources
     cur.close()
+
+    # Render the IT support ticket management template
     return render_template("manage_tickets.html", tickets=tickets)
 
 
