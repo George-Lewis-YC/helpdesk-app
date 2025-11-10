@@ -12,9 +12,11 @@
     </head>
     <body>
         <div class="top-banner">
-            <img class="logo"
-                 src="{{ url_for('static', filename='logo.png') }}"
-                 alt="IT Helpdesk Logo" />
+            <a href='{{ url_for("dashboard_it") }}'>
+                <img class="logo"
+                     src="{{ url_for('static', filename='logo.png') }}"
+                     alt="IT Helpdesk Logo" />
+            </a>
             <div class="banner-title">
                 <div class="site-title">IT Helpdesk</div>
                 <div class="page-title">IT Staff Dashboard - Manage Tickets</div>
@@ -27,9 +29,9 @@
             {% if messages %}
                 {% for category, message in messages %}
                     {% if category == 'error' %}
-                        <p style="color: red">{{ message }}</p>
+                        <p class="flash-error">{{ message }}</p>
                     {% elif category == 'success' %}
-                        <p style="color: green">{{ message }}</p>
+                        <p class="flash-success">{{ message }}</p>
                     {% else %}
                         <p>{{ message }}</p>
                     {% endif %}

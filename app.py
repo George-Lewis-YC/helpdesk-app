@@ -217,7 +217,7 @@ def my_ticket_history():
     tickets = cur.fetchall()
     cur.close()
 
-    return render_template("my_tickets.html", tickets=tickets)
+    return render_template("my_ticket_history.html", tickets=tickets)
 
 
 # it support routes
