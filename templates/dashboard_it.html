@@ -20,17 +20,19 @@
         <div class="page-title">IT Staff Dashboard</div>
       </div>
     </div>
-    <title>IT Staff Dashboard</title>
-    <h2>Welcome, {{ session['username'] }} (IT Staff)</h2>
-    <!-- Logout link -->
-    <p>
-      <a href='{{ url_for("logout") }}'>Logout</a>
-    </p>
-    <!-- User-specific options -->
-    <ul>
-      <li>
-        <a href='{{ url_for("manage_tickets") }}'>Manage Tickets</a>
-      </li>
-    </ul>
+    <main class="container">
+      <title>IT Staff Dashboard</title>
+      <h2>Welcome, {{ session['username'] }} (IT Staff)</h2>
+      <!-- Logout link -->
+      <p>
+        <a href='{{ url_for("logout") }}'>Logout</a>
+      </p>
+      <!-- User-specific options -->
+      <ul>
+        <li>
+          <a href='{{ url_for("manage_tickets") }}'>Manage Tickets</a>
+        </li>
+      </ul>
+    </main>
   </body>
 </html>

@@ -23,6 +23,7 @@
     </div>
     <main class="container">
       <!-- Login form -->
+      <h1>Sign in to your account</h1>
       <form method="post">
         <label for="username">Username:</label>
         <input id="username" type="text" name="username" required />
@@ -36,6 +37,7 @@
         {% if messages %}
           {% for category, message in messages %}
             {% if category == 'error' %}
+              <img class="icon" src="{{ url_for('static', filename='mark.png') }}" />
               <p class="flash-error">{{ message }}</p>
             {% elif category == 'success' %}
               <p class="flash-success">{{ message }}</p>

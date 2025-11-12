@@ -39,27 +39,30 @@
             {% endif %}
         {% endwith %}
         {% for ticket in tickets %}
-            <form method="POST">
-                <input type="hidden" name="ticket_id" value="{{ ticket[0] }}">
-                <p>
-                    <strong>{{ ticket[1] }}</strong> - {{ ticket[2] }}
-                </p>
-                <label>Status:</label>
-                <select name="status">
-                    <option value="Open" {% if ticket[5] == 'Open' %}selected{% endif %}>Open</option>
-                    <option value="In Progress"
-                            {% if ticket[5] == 'In Progress' %}selected{% endif %}>In Progress</option>
-                    <option value="Resolved" {% if ticket[5] == 'Resolved' %}selected{% endif %}>Resolved</option>
-                    <option value="Closed" {% if ticket[5] == 'Closed' %}selected{% endif %}>Closed</option>
-                </select>
-                <label>Priority:</label>
-                <select name="priority">
-                    <option value="Low" {% if ticket[4] == 'Low' %}selected{% endif %}>Low</option>
-                    <option value="Medium" {% if ticket[4] == 'Medium' %}selected{% endif %}>Medium</option>
-                    <option value="High" {% if ticket[4] == 'High' %}selected{% endif %}>High</option>
-                </select>
-                <button type="submit">Update</button>
-            </form>
+            <div class="ticket-card">
+                <form method="POST">
+                    <input type="hidden" name="ticket_id" value="{{ ticket[0] }}">
+                    <p>
+                        <strong>Title - Description:</strong>
+                    </p>
+                    <p>{{ ticket[1] }} - {{ ticket[2] }}</p>
+                    <label>Status:</label>
+                    <select name="status">
+                        <option value="Open" {% if ticket[5] == 'Open' %}selected{% endif %}>Open</option>
+                        <option value="In Progress"
+                                {% if ticket[5] == 'In Progress' %}selected{% endif %}>In Progress</option>
+                        <option value="Resolved" {% if ticket[5] == 'Resolved' %}selected{% endif %}>Resolved</option>
+                        <option value="Closed" {% if ticket[5] == 'Closed' %}selected{% endif %}>Closed</option>
+                    </select>
+                    <label>Priority:</label>
+                    <select name="priority">
+                        <option value="Low" {% if ticket[4] == 'Low' %}selected{% endif %}>Low</option>
+                        <option value="Medium" {% if ticket[4] == 'Medium' %}selected{% endif %}>Medium</option>
+                        <option value="High" {% if ticket[4] == 'High' %}selected{% endif %}>High</option>
+                    </select>
+                    <button type="submit">Update</button>
+                </form>
+            </div>
         {% endfor %}
     </body>
 </html>

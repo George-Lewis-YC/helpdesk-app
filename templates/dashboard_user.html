@@ -20,22 +20,24 @@
         <div class="page-title">User Dashboard</div>
       </div>
     </div>
-    <h2>Welcome, {{ session['username'] }} (User)</h2>
-    <!-- Logout link -->
-    <p>
-      <a href='{{ url_for("logout") }}'>Logout</a>
-    </p>
-    <!-- User-specific options -->
-    <ul>
-      <li>
-        <a href='{{ url_for("submit_ticket") }}'>Submit New Ticket</a>
-      </li>
-      <li>
-        <a href='{{ url_for("my_tickets") }}'>View My Tickets</a>
-      </li>
-      <li>
-        <a href='{{ url_for("my_ticket_history") }}'>View My Ticket History</a>
-      </li>
-    </ul>
+    <main class="container">
+      <h2>Welcome, {{ session['username'] }} (User)</h2>
+      <!-- Logout link -->
+      <p>
+        <a href='{{ url_for("logout") }}'>Logout</a>
+      </p>
+      <!-- User-specific options -->
+      <ul>
+        <li>
+          <a href='{{ url_for("submit_ticket") }}'>Submit New Ticket</a>
+        </li>
+        <li>
+          <a href='{{ url_for("my_tickets") }}'>View My Tickets</a>
+        </li>
+        <li>
+          <a href='{{ url_for("my_ticket_history") }}'>View My Ticket History</a>
+        </li>
+      </ul>
+    </main>
   </body>
 </html>

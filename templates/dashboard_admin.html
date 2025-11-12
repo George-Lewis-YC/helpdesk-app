@@ -19,18 +19,20 @@
         <div class="page-title">Admin Dashboard</div>
       </div>
     </div>
-    <h2>Welcome, {{ session['username'] }} (Admin)</h2>
-    <p>
-      <!-- Logout link -->
-      <a href='{{ url_for("logout") }}'>Logout</a>
-    </p>
-    <ul>
-      <!-- User-specific options -->
-      <!-- <li>#Reassign or Escalate Tickets</li>
+    <main class="container">
+      <h2>Welcome, {{ session['username'] }} (Admin)</h2>
+      <p>
+        <!-- Logout link -->
+        <a href='{{ url_for("logout") }}'>Logout</a>
+      </p>
+      <ul>
+        <!-- User-specific options -->
+        <!-- <li>#Reassign or Escalate Tickets</li>
       <li>#View Metrics & Reports</li> -->
-      <li>
-        <a href='{{ url_for("manage_users") }}'>Manage Users</a>
-      </li>
-    </ul>
+        <li>
+          <a href='{{ url_for("manage_users") }}'>Manage Users</a>
+        </li>
+      </ul>
+    </main>
   </body>
 </html>
