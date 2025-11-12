@@ -37,8 +37,10 @@
         {% if messages %}
           {% for category, message in messages %}
             {% if category == 'error' %}
-              <img class="icon" src="{{ url_for('static', filename='mark.png') }}" />
-              <p class="flash-error">{{ message }}</p>
+              <p class="flash-error">
+                <img class="icon" src="{{ url_for('static', filename='mark.png') }}" />
+                {{ message }}
+              </p>
             {% elif category == 'success' %}
               <p class="flash-success">{{ message }}</p>
             {% else %}

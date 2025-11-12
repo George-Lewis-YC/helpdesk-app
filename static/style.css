@@ -1,3 +1,5 @@
+/* BANNER */
+
 .top-banner {
   position: fixed;
   top: 0;
@@ -8,7 +10,7 @@
   align-items: center;
   padding: 0 20px;
   background-color: #ffffff;
-  color: #184a7c; /* text color for the banner */
+  color: #1c3e7f; /* text color for the banner */
   z-index: 1000;
   outline: 20px solid red;
 }
@@ -20,7 +22,7 @@
   right: 0;
   bottom: -20px; /* sits just below the banner */
   height: 20px;
-  background-color: #184a7c; /* change to preferred color */
+  background-color: #1c3e7f; /* change to preferred color */
   z-index: 1001;
 }
 
@@ -35,6 +37,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  color: #1c3e7f;
 }
 
 .banner-title .site-title {
@@ -49,6 +52,8 @@
   line-height: 1;
   margin-top: 2px;
 }
+
+/* MAIN */
 
 /* ensure page content isn't hidden under the fixed banner */
 body {
@@ -70,8 +75,10 @@ body {
   text-align: left; /* ensure inline text is left-aligned */
   box-sizing: border-box;
   width: 100%;
-  outline: 1px solid red;
+  outline: 1px solid red; /* for debugging layout */
 }
+
+/* FORMS */
 
 form label {
   display: block;
@@ -92,12 +99,29 @@ form button {
   width: 100%;
 }
 
+/* FLASH MESSAGES */
+
 .flash-error {
   color: red;
 }
 .flash-success {
   color: green;
 }
+
+.flash-error {
+  display: flex;
+  align-items: center; /* vertically center icon and text */
+  gap: 6px; /* space between icon and text */
+  color: #d9534f; /* typical error color */
+}
+
+.flash-error .icon {
+  width: 16px; /* adjust size */
+  height: 16px;
+  vertical-align: middle; /* ensures inline alignment if not using flex */
+}
+
+/* TICKETS */
 
 .ticket-card {
   border: 1px solid #ccc;
@@ -136,5 +160,5 @@ form button {
 }
 
 .ticket-card button:hover {
-  background-color: #0056b3;
+  background-color: #1c3e7f;
 }
