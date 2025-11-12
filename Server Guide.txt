@@ -1,0 +1,45 @@
+1. Install Prerequisites
+Python: Download and install Python for Windows.
+Pip: Comes with Python, verify:
+
+python --version
+pip --version
+
+
+Virtual Environment:
+
+python -m venv venv
+.\venv\Scripts\activate
+
+
+2. Install Dependencies
+Inside the virtual environment:
+
+pip install flask flask-mysqldb gunicorn waitress
+
+
+3. Configure MySQL
+Install MySQL for Windows.
+Create database and user:
+
+CREATE DATABASE helpdesk_db;
+CREATE USER 'helpdesk_user'@'localhost' IDENTIFIED BY 'StrongPassword123!';
+GRANT ALL PRIVILEGES ON helpdesk_db.* TO 'helpdesk_user'@'localhost';
+FLUSH PRIVILEGES;
+
+
+Update app.py:
+app.config["MYSQL_HOST"] = "localhost"
+app.config["MYSQL_USER"] = "helpdesk_user"
+app.config["MYSQL_PASSWORD"] = "StrongPassword123!"
+app.config["MYSQL_DB"] = "helpdesk_db"
+
+
+4. Test Locally
+Run Flask:
+flask run --host=0.0.0.0 --port=5000
+
+Access from another PC:
+http://<server-ip>:5000
+
+
