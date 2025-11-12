@@ -21,48 +21,50 @@
         <div class="page-title">User Dashboard - Submit a New Ticket</div>
       </div>
     </div>
-    <p>
-      <a href='{{ url_for("dashboard_user") }}'>Back to Dashboard</a>
-    </p>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          {% if category == 'error' %}
-            <p class="flash-error">{{ message }}</p>
-          {% elif category == 'success' %}
-            <p class="flash-success">{{ message }}</p>
-          {% else %}
-            <p>{{ message }}</p>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-    <form method="POST">
-      <label>Title:</label>
-      <br />
-      <input type="text" name="title" required />
-      <br />
-      <br />
-      <label>Description:</label>
-      <br />
-      <textarea name="description" required></textarea>
-      <br />
-      <br />
-      <label>Category:</label>
-      <br />
-      <input type="text" name="category" />
-      <br />
-      <br />
-      <label>Priority:</label>
-      <br />
-      <select name="priority">
-        <option value="Low">Low</option>
-        <option value="Medium" selected>Medium</option>
-        <option value="High">High</option>
-      </select>
-      <br />
-      <br />
-      <button type="submit">Submit Ticket</button>
-    </form>
+    <main class="container">
+      <p>
+        <a href='{{ url_for("dashboard_user") }}'>Back to Dashboard</a>
+      </p>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            {% if category == 'error' %}
+              <p class="flash-error">{{ message }}</p>
+            {% elif category == 'success' %}
+              <p class="flash-success">{{ message }}</p>
+            {% else %}
+              <p>{{ message }}</p>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <form method="POST">
+        <label>Title:</label>
+        <br />
+        <input type="text" name="title" required />
+        <br />
+        <br />
+        <label>Description:</label>
+        <br />
+        <textarea name="description" required></textarea>
+        <br />
+        <br />
+        <label>Category:</label>
+        <br />
+        <input type="text" name="category" />
+        <br />
+        <br />
+        <label>Priority:</label>
+        <br />
+        <select name="priority">
+          <option value="Low">Low</option>
+          <option value="Medium" selected>Medium</option>
+          <option value="High">High</option>
+        </select>
+        <br />
+        <br />
+        <button type="submit">Submit Ticket</button>
+      </form>
+    </main>
   </body>
 </html>

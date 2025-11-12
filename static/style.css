@@ -83,7 +83,7 @@ body {
 form label {
   display: block;
   margin-top: 12px;
-  outline: 1px solid red;
+  outline: 1px solid red; /* for debugging layout */
 }
 
 form input {
@@ -101,9 +101,6 @@ form button {
 
 /* FLASH MESSAGES */
 
-.flash-error {
-  color: red;
-}
 .flash-success {
   color: green;
 }
@@ -112,7 +109,7 @@ form button {
   display: flex;
   align-items: center; /* vertically center icon and text */
   gap: 6px; /* space between icon and text */
-  color: #d9534f; /* typical error color */
+  color: #ff0800; /* typical error color */
 }
 
 .flash-error .icon {

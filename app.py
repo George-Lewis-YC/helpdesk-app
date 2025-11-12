@@ -203,6 +203,7 @@ def dashboard_it():
     else:
         return redirect(url_for("login"))
 
+
 @app.route("/manage_tickets", methods=["GET", "POST"])
 def manage_tickets():
     # Only IT Support users can access this page
@@ -282,6 +283,7 @@ def delete_user(user_id):
     else:
         return "Access Denied"
 
+
 @app.route("/reset_password/<int:user_id>", methods=["POST"])
 def reset_password(user_id):
     # Ensure only Admins can reset user passwords
@@ -290,7 +292,7 @@ def reset_password(user_id):
         # new_password = request.form.get("new_password")
         new_password = "password"
         if not new_password:
-            flash("New password is required.", "danger")
+            flash("New password is required.", "error")
             return redirect(url_for("manage_users"))
 
         # Hash the password
