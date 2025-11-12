@@ -22,31 +22,6 @@ mysql = MySQL(app)
 def home():
     return redirect(url_for("login"))
 
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     # If the form was submitted via POST, process the login fields
-#     if request.method == 'POST':
-#         # Retrieve submitted username and password from the form
-#         username = request.form['username']
-#         password = request.form['password']
-
-#         # Open a DB cursor and fetch the stored password and role for this username
-#         cur = mysql.connection.cursor()
-#         cur.execute("SELECT password, role FROM users WHERE username = %s", (username,))
-#         user = cur.fetchone()
-#         # Close the cursor to release database resources
-#         cur.close()
-
-#         if user and user[0] == password:  # later use hashed password check
-#             session['username'] = username
-#             session['role'] = user[1]
-#             return f"Welcome, {username}! You are logged in as {user[1]}."
-#         else:
-#             flash("Invalid username or password. Please try again.")
-#             return redirect(url_for('login'))
-
-#     return render_template('login.html')
-
 # login, logout, and register routes
 # Login route handling both GET (show form) and POST (process login)
 @app.route("/login", methods=["GET", "POST"])
@@ -303,6 +278,32 @@ def delete_user(user_id):
 
         # Show success message
         flash("User deleted successfully.", "success")
+        return redirect(url_for("manage_users"))
+    else:
+        return "Access Denied"
+
+@app.route("/reset_password/<int:user_id>", methods=["POST"])
+def reset_password(user_id):
+    # Ensure only Admins can reset user passwords
+    if "role" in session and session["role"] == "Admin":
+        # Get new password from form
+        # new_password = request.form.get("new_password")
+        new_password = "password"
+        if not new_password:
+            flash("New password is required.", "danger")
+            return redirect(url_for("manage_users"))
+
+        # Hash the password
+        hashed_password = generate_password_hash(new_password)
+
+        # Update password in DB
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE users SET password=%s WHERE id=%s", (hashed_password, user_id))
+        mysql.connection.commit()
+        cur.close()
+
+        # Show success message
+        flash("Password reset successfully.", "success")
         return redirect(url_for("manage_users"))
     else:
         return "Access Denied"

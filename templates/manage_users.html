@@ -40,8 +40,14 @@
             <td>{{ user[1] }}</td>
             <!-- Role -->
             <td>{{ user[2] }}</td>
-            <!-- Action / Delete User -->
+            <!-- Action / Reset Password -->
             <td>
+              <form method="POST"
+                    action="{{ url_for('reset_password', user_id=user[0]) }}"
+                    onsubmit="return confirm('Are you sure you want to reset this users password?');">
+                <button type="submit">Reset Password</button>
+              </form>
+              <!-- Action / Delete User -->
               <form method="POST"
                     action="{{ url_for('delete_user', user_id=user[0]) }}"
                     onsubmit="return confirm('Are you sure you want to delete this user?');">
