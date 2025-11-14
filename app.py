@@ -11,8 +11,8 @@ app.secret_key = "secret_key"  # Should replace with a strong, random string
 
 # MySQL configuration
 app.config["MYSQL_HOST"] = "localhost"
-app.config["MYSQL_USER"] = "root"
-app.config["MYSQL_PASSWORD"] = "admin"
+app.config["MYSQL_USER"] = "helpdesk_user"
+app.config["MYSQL_PASSWORD"] = "StrongPassword123!"
 app.config["MYSQL_DB"] = "helpdesk_db"
 
 mysql = MySQL(app)

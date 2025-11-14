@@ -40,7 +40,7 @@
         {% endwith %}
         {% for ticket in tickets %}
             <div class="ticket-card">
-                <form method="POST">
+                <form method="post">
                     <input type="hidden" name="ticket_id" value="{{ ticket[0] }}">
                     <p>
                         <strong>Title - Description:</strong>
