@@ -42,19 +42,19 @@
         {% for ticket in tickets %}
           <tr>
             <!-- Ticket ID -->
-            <td>{{ ticket[0] }}</td>
+            <td>{{ ticket.id }}</td>
             <!-- Ticket Title -->
-            <td>{{ ticket[1] }}</td>
+            <td>{{ ticket.title }}</td>
             <!-- Ticket Description -->
-            <td>{{ ticket[2] }}</td>
+            <td>{{ ticket.description }}</td>
             <!-- Ticket Category -->
-            <td>{{ ticket[3] }}</td>
+            <td>{{ ticket.category }}</td>
             <!-- Ticket Priority -->
-            <td>{{ ticket[4] }}</td>
+            <td>{{ ticket.priority }}</td>
             <!-- Ticket Status -->
-            <td>{{ ticket[5] }}</td>
+            <td>{{ ticket.status }}</td>
             <!-- Ticket Time -->
-            <td>{{ ticket[6] }}</td>
+            <td>{{ ticket.created_at }}</td>
           </tr>
         {% endfor %}
         <!-- End tickets loop -->

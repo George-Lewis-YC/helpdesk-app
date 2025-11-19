@@ -35,21 +35,21 @@
         {% for user in users %}
           <tr>
             <!-- User Id -->
-            <td>{{ user[0] }}</td>
+            <td>{{ user.id }}</td>
             <!-- Username -->
-            <td>{{ user[1] }}</td>
+            <td>{{ user.username }}</td>
             <!-- Role -->
-            <td>{{ user[2] }}</td>
+            <td>{{ user.role }}</td>
             <!-- Action / Reset Password -->
             <td>
               <form method="post"
-                    action="{{ url_for('reset_password', user_id=user[0]) }}"
+                    action="{{ url_for('reset_password', user_id=user['id']) }}"
                     onsubmit="return confirm('Are you sure you want to reset this users password?');">
                 <button type="submit">Reset Password</button>
               </form>
               <!-- Action / Delete User -->
               <form method="post"
-                    action="{{ url_for('delete_user', user_id=user[0]) }}"
+                    action="{{ url_for('delete_user', user_id=user['id']) }}"
                     onsubmit="return confirm('Are you sure you want to delete this user?');">
                 <button type="submit">Delete</button>
               </form>

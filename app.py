@@ -1,21 +1,30 @@
 # Import required modules
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from flask_mysqldb import MySQL
+# from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash, check_password_hash
+import pymysql
 
 # Create a Flask application instance
 app = Flask(__name__)
-
 # Required for session and flash messages
 app.secret_key = "secret_key"  # Should replace with a strong, random string
 
-# MySQL configuration
-app.config["MYSQL_HOST"] = "localhost"
-app.config["MYSQL_USER"] = "helpdesk_user"
-app.config["MYSQL_PASSWORD"] = "StrongPassword123!"
-app.config["MYSQL_DB"] = "helpdesk_db"
+# # MySQL configuration
+# app.config["MYSQL_HOST"] = "localhost"
+# app.config["MYSQL_USER"] = "helpdesk_user"
+# app.config["MYSQL_PASSWORD"] = "StrongPassword123!"
+# app.config["MYSQL_DB"] = "helpdesk_db"
+# mysql = MySQL(app)
 
-mysql = MySQL(app)
+# Database connection function
+def get_db_connection():
+    return pymysql.connect(
+        host="localhost",
+        user="helpdesk_user",
+        password="StrongPassword123!",
+        database="helpdesk_db",
+        cursorclass=pymysql.cursors.DictCursor
+    )
 
 # Redirect root URL to login page
 @app.route("/")
@@ -30,25 +39,24 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        # Open a cursor to run the DB query
-        cur = mysql.connection.cursor()
-        # Fetch the stored (hashed) password and role for the given username
+        conn = get_db_connection()
+        cur = conn.cursor()
         cur.execute("SELECT password, role FROM users WHERE username = %s", (username,))
         user = cur.fetchone()
-        # Close the cursor to release DB resources
         cur.close()
+        conn.close()
 
         # Check if username exists and password matches
         if user and check_password_hash(
-            user[0], password
+            user["password"], password
         ): 
             session["username"] = username
-            session["role"] = user[1]
+            session["role"] = user["role"]
 
             # Redirect based on role
-            if user[1] == "Admin":
+            if user["role"] == "Admin":
                 return render_template("dashboard_admin.html")
-            elif user[1] == "IT Support":
+            elif user["role"] == "IT Support":
                 return render_template("dashboard_it.html")
             else:
                 return render_template("dashboard_user.html")
@@ -78,27 +86,28 @@ def register():
         password = request.form["password"]
         role = request.form["role"]
 
-        # Check if username already exists
-        cur = mysql.connection.cursor()
+        conn = get_db_connection()
+        cur = conn.cursor()
         cur.execute("SELECT id FROM users WHERE username = %s", (username,))
         existing_user = cur.fetchone()
 
         if existing_user:
             flash("Username already exists. Please choose a different one.", "error")
             cur.close()
+            conn.close()
             return redirect(url_for("register"))
 
         # Hash the password before storing
         hashed_password = generate_password_hash(password)
 
         # Insert into database
-        cur = mysql.connection.cursor()
         cur.execute(
             "INSERT INTO users (username, password, role) VALUES (%s, %s, %s)",
             (username, hashed_password, role),
         )
-        mysql.connection.commit()
+        conn.commit()
         cur.close()
+        conn.close()
 
         flash("Registration successful. You can now log in.", "success")
         return redirect(url_for("login"))
@@ -127,8 +136,10 @@ def submit_ticket():
         priority = request.form["priority"]
 
         # Get user ID from database
-        cur = mysql.connection.cursor()
+        conn = get_db_connection()
+        cur = conn.cursor()
         cur.execute("SELECT id FROM users WHERE username = %s", (session["username"],))
+        conn.commit()
         user = cur.fetchone()
 
         # Insert ticket
@@ -137,10 +148,10 @@ def submit_ticket():
             INSERT INTO tickets (user_id, title, description, category, priority)
             VALUES (%s, %s, %s, %s, %s)
         """,
-            (user[0], title, description, category, priority),
+            (id, title, description, category, priority),
         )
-        mysql.connection.commit()
         cur.close()
+        conn.close()
 
         flash("Ticket submitted successfully.", "success")
 
@@ -154,7 +165,8 @@ def my_tickets():
         return redirect(url_for("login"))
 
     # Fetch tickets submitted by the current user
-    cur = mysql.connection.cursor()
+    conn = get_db_connection()
+    cur = conn.cursor()
     cur.execute(
         """
         SELECT id, title, description, category, priority, status, created_at
@@ -167,6 +179,7 @@ def my_tickets():
     )
     tickets = cur.fetchall()
     cur.close()
+    conn.close()
 
     return render_template("my_tickets.html", tickets=tickets)
 
@@ -178,7 +191,8 @@ def my_ticket_history():
         return redirect(url_for("login"))
 
     # Fetch tickets submitted by the current user
-    cur = mysql.connection.cursor()
+    conn = get_db_connection()
+    cur = conn.cursor()
     cur.execute(
         """
         SELECT id, title, description, category, priority, status, created_at
@@ -191,6 +205,7 @@ def my_ticket_history():
     )
     tickets = cur.fetchall()
     cur.close()
+    conn.close()
 
     return render_template("my_ticket_history.html", tickets=tickets)
 
@@ -211,7 +226,8 @@ def manage_tickets():
         return redirect(url_for("login"))
 
     # Open a DB cursor for queries/updates
-    cur = mysql.connection.cursor()
+    conn = get_db_connection()
+    cur = conn.cursor()
 
     # Handle form submission to update ticket status/priority
     if request.method == "POST":
@@ -229,7 +245,7 @@ def manage_tickets():
         """,
             (new_status, new_priority, ticket_id),
         )
-        mysql.connection.commit()
+        conn.commit()
         flash("Ticket updated successfully.", "success")
 
     # Fetch all tickets to display to IT Support
@@ -240,6 +256,7 @@ def manage_tickets():
 
     # Close cursor to release DB resources
     cur.close()
+    conn.close()
 
     # Render the IT support ticket management template
     return render_template("manage_tickets.html", tickets=tickets)
@@ -257,10 +274,12 @@ def dashboard_admin():
 @app.route("/manage_users")
 def manage_users():
     if "role" in session and session["role"] == "Admin":
-        cur = mysql.connection.cursor()
+        conn = get_db_connection()
+        cur = conn.cursor()
         cur.execute("SELECT id, username, role FROM users")
         users = cur.fetchall()
         cur.close()
+        conn.close()
 
         return render_template("manage_users.html", users=users)
     else:
@@ -272,10 +291,12 @@ def delete_user(user_id):
     # Ensure only Admins can delete users
     if "role" in session and session["role"] == "Admin":
         # Delete user by ID
-        cur = mysql.connection.cursor()
+        conn = get_db_connection()
+        cur = conn.cursor()
         cur.execute("DELETE FROM users WHERE id = %s", (user_id,))
-        mysql.connection.commit()
+        conn.commit()
         cur.close()
+        conn.close()
 
         # Show success message
         flash("User deleted successfully.", "success")
@@ -299,10 +320,12 @@ def reset_password(user_id):
         hashed_password = generate_password_hash(new_password)
 
         # Update password in DB
-        cur = mysql.connection.cursor()
+        conn = get_db_connection()
+        cur = conn.cursor()
         cur.execute("UPDATE users SET password=%s WHERE id=%s", (hashed_password, user_id))
-        mysql.connection.commit()
+        conn.commit()
         cur.close()
+        conn.close()
 
         # Show success message
         flash("Password reset successfully.", "success")
