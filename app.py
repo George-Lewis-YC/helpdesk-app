@@ -7,17 +7,13 @@ import pymysql
 # Create a Flask application instance
 app = Flask(__name__)
 # Required for session and flash messages
-app.secret_key = "secret_key"  # Should replace with a strong, random string
-
-# # MySQL configuration
-# app.config["MYSQL_HOST"] = "localhost"
-# app.config["MYSQL_USER"] = "helpdesk_user"
-# app.config["MYSQL_PASSWORD"] = "StrongPassword123!"
-# app.config["MYSQL_DB"] = "helpdesk_db"
-# mysql = MySQL(app)
+# NOTE: Replace with a strong random secret in production (e.g., environment variable)
+app.secret_key = "secret_key"
 
 # Database connection function
 def get_db_connection():
+    # Returns a new DB connection for each call. Caller must close connection.
+    # Consider using connection pooling for higher throughput.
     return pymysql.connect(
         host="localhost",
         user="helpdesk_user",
@@ -41,19 +37,21 @@ def login():
 
         conn = get_db_connection()
         cur = conn.cursor()
+        # Parameterized query prevents SQL injection
         cur.execute("SELECT password, role FROM users WHERE username = %s", (username,))
         user = cur.fetchone()
         cur.close()
         conn.close()
 
         # Check if username exists and password matches
-        if user and check_password_hash(
-            user["password"], password
-        ): 
+        # check_password_hash handles timing-safe comparison
+        if user and check_password_hash(user["password"], password):
+            # Store minimal info in session; avoid sensitive data
             session["username"] = username
             session["role"] = user["role"]
 
-            # Redirect based on role
+            # Redirect/render based on role: Admin, IT Support, or regular User
+            # Role values are case-sensitive strings in this implementation
             if user["role"] == "Admin":
                 return render_template("dashboard_admin.html")
             elif user["role"] == "IT Support":
@@ -70,13 +68,9 @@ def login():
 
 @app.route("/logout")
 def logout():
-    # Clear all session data
+    # Clear session on logout to remove authentication state
     session.clear()
-
-    # Show a logout confirmation message
     flash("You have been logged out.", "success")
-
-    # Redirect back to the login page
     return redirect(url_for("login"))
 
 @app.route("/register", methods=["GET", "POST"])
@@ -88,6 +82,7 @@ def register():
 
         conn = get_db_connection()
         cur = conn.cursor()
+        # Check for existing username to enforce uniqueness
         cur.execute("SELECT id FROM users WHERE username = %s", (username,))
         existing_user = cur.fetchone()
 
@@ -97,10 +92,10 @@ def register():
             conn.close()
             return redirect(url_for("register"))
 
-        # Hash the password before storing
+        # Hash the password before storing (use werkzeug's recommended hashing)
         hashed_password = generate_password_hash(password)
 
-        # Insert into database
+        # Insert into database using parameterized query
         cur.execute(
             "INSERT INTO users (username, password, role) VALUES (%s, %s, %s)",
             (username, hashed_password, role),
@@ -118,6 +113,7 @@ def register():
 # user routes
 @app.route("/dashboard_user")
 def dashboard_user():
+    # Ensure only authenticated users with the 'User' role can access
     if "username" in session and session["role"] == "User":
         return render_template("dashboard_user.html")
     else:
@@ -130,16 +126,16 @@ def submit_ticket():
         return redirect(url_for("login"))
 
     if request.method == "POST":
+        # Collect ticket fields from the form
         title = request.form["title"]
         description = request.form["description"]
         category = request.form["category"]
         priority = request.form["priority"]
 
-        # Get user ID from database
+        # Get user ID from database based on session username
         conn = get_db_connection()
         cur = conn.cursor()
         cur.execute("SELECT id FROM users WHERE username = %s", (session["username"],))
-        conn.commit()
         user = cur.fetchone()
 
         # Insert ticket
@@ -148,8 +144,9 @@ def submit_ticket():
             INSERT INTO tickets (user_id, title, description, category, priority)
             VALUES (%s, %s, %s, %s, %s)
         """,
-            (id, title, description, category, priority),
+            (user["id"], title, description, category, priority),
         )
+        conn.commit()
         cur.close()
         conn.close()
 
@@ -164,7 +161,7 @@ def my_tickets():
     if "username" not in session or session["role"] != "User":
         return redirect(url_for("login"))
 
-    # Fetch tickets submitted by the current user
+    # Fetch tickets submitted by the current user (excluding Closed)
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute(
@@ -190,7 +187,7 @@ def my_ticket_history():
     if "username" not in session or session["role"] != "User":
         return redirect(url_for("login"))
 
-    # Fetch tickets submitted by the current user
+    # Fetch tickets submitted by the current user with status 'Closed'
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute(
@@ -213,6 +210,7 @@ def my_ticket_history():
 # it support routes
 @app.route("/dashboard_it")
 def dashboard_it():
+    # Ensure only IT Support role can access
     if "username" in session and session["role"] == "IT Support":
         return render_template("dashboard_it.html")
     else:
@@ -265,6 +263,7 @@ def manage_tickets():
 # admin routes
 @app.route("/dashboard_admin")
 def dashboard_admin():
+    # Ensure only Admin role can access
     if "username" in session and session["role"] == "Admin":
         return render_template("dashboard_admin.html")
     else:
@@ -273,6 +272,7 @@ def dashboard_admin():
 
 @app.route("/manage_users")
 def manage_users():
+    # Only Admins can view/manage users
     if "role" in session and session["role"] == "Admin":
         conn = get_db_connection()
         cur = conn.cursor()
@@ -283,7 +283,7 @@ def manage_users():
 
         return render_template("manage_users.html", users=users)
     else:
-        return "Access Denied"
+        return redirect(url_for("login"))
 
 
 @app.route("/delete_user/<int:user_id>", methods=["POST"])
@@ -302,21 +302,21 @@ def delete_user(user_id):
         flash("User deleted successfully.", "success")
         return redirect(url_for("manage_users"))
     else:
-        return "Access Denied"
+        return redirect(url_for("login"))
 
 
 @app.route("/reset_password/<int:user_id>", methods=["POST"])
 def reset_password(user_id):
     # Ensure only Admins can reset user passwords
     if "role" in session and session["role"] == "Admin":
-        # Get new password from form
+        # TODO: Replace hardcoded password with request.form input and proper validation
         # new_password = request.form.get("new_password")
         new_password = "password"
         if not new_password:
             flash("New password is required.", "error")
             return redirect(url_for("manage_users"))
 
-        # Hash the password
+        # Hash the password before storing
         hashed_password = generate_password_hash(new_password)
 
         # Update password in DB

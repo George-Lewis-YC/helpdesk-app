@@ -12,7 +12,7 @@
   background-color: #ffffff;
   color: #1c3e7f; /* text color for the banner */
   z-index: 1000;
-  outline: 20px solid red;
+  /* outline: 20px solid red; */
 }
 /* colored strip along the bottom of the banner */
 .top-banner::after {
@@ -64,7 +64,7 @@ body {
 
 /* container to keep content centered on the page */
 .container {
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
   min-height: calc(100vh - 90px); /* full viewport height minus fixed banner */
@@ -75,7 +75,7 @@ body {
   text-align: left; /* ensure inline text is left-aligned */
   box-sizing: border-box;
   width: 100%;
-  outline: 1px solid red; /* for debugging layout */
+  /* outline: 1px solid red; for debugging layout */
 }
 
 /* FORMS */
@@ -83,7 +83,7 @@ body {
 form label {
   display: block;
   margin-top: 12px;
-  outline: 1px solid red; /* for debugging layout */
+  /* outline: 1px solid red; for debugging layout */
 }
 
 form input {
@@ -109,7 +109,7 @@ form button {
   display: flex;
   align-items: center; /* vertically center icon and text */
   gap: 6px; /* space between icon and text */
-  color: #ff0800; /* typical error color */
+  /* color: #ff0800; typical error color */
 }
 
 .flash-error .icon {
